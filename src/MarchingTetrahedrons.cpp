@@ -49,7 +49,8 @@ void buildNormalsFaces(ofMesh& mesh) {
 void buildNormalsSingle(ofMesh& mesh) {
 	vector<ofIndexType>& indices = mesh.getIndices();
 	vector<bool> ready(mesh.getNumVertices());
-	vector<ofVec3f> normals(mesh.getNumVertices());
+	//vector<ofVec3f> normals(mesh.getNumVertices());
+	vector<glm::vec3> normals(mesh.getNumVertices());
 	for(int i = 0; i < indices.size(); i += 3) {
 		int i0 = indices[i + 0], i1 = indices[i + 1], i2 = indices[i + 2];
 		ofVec3f normal = getNormal(mesh.getVertices()[i0], mesh.getVertices()[i1], mesh.getVertices()[i2]);
@@ -71,16 +72,31 @@ void buildNormalsSingle(ofMesh& mesh) {
 
 void buildNormalsAverage(ofMesh& mesh) {
 	vector<ofIndexType>& indices = mesh.getIndices();
-	vector<ofVec3f> normals(mesh.getNumVertices());
-	for(int i = 0; i < indices.size(); i += 3) {
+
+	////vector<ofVec3f> normals(mesh.getNumVertices());
+	//vector<glm::vec3> normals(mesh.getNumVertices());
+	//for(int i = 0; i < indices.size(); i += 3) {
+	//	int i0 = indices[i + 0], i1 = indices[i + 1], i2 = indices[i + 2];
+	//	ofVec3f normal = getNormal(mesh.getVertices()[i0], mesh.getVertices()[i1], mesh.getVertices()[i2]);
+	//	normals[i0] += normal;
+	//	normals[i1] += normal;
+	//	normals[i2] += normal;
+	//}
+	//for(int i = 0; i < normals.size(); i++) {
+	//	normals[i].normalize();
+	//}
+	//mesh.addNormals(normals);
+
+	vector<glm::vec3> normals(mesh.getNumVertices());
+	for (int i = 0; i < indices.size(); i += 3) {
 		int i0 = indices[i + 0], i1 = indices[i + 1], i2 = indices[i + 2];
-		ofVec3f normal = getNormal(mesh.getVertices()[i0], mesh.getVertices()[i1], mesh.getVertices()[i2]);
+		glm::vec3 normal = getNormal(mesh.getVertices()[i0], mesh.getVertices()[i1], mesh.getVertices()[i2]);
 		normals[i0] += normal;
 		normals[i1] += normal;
 		normals[i2] += normal;
 	}
-	for(int i = 0; i < normals.size(); i++) {
-		normals[i].normalize();
+	for (int i = 0; i < normals.size(); i++) {
+		normals[i] = glm::normalize(normals[i]);
 	}
 	mesh.addNormals(normals);
 }
